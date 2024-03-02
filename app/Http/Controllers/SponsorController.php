@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sponsor;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -36,5 +35,17 @@ class SponsorController extends Controller
                 'errors' => $e->errors(),
             ], 422);
         };
+    }
+
+    public function getSponsors()
+    {
+        $user = Auth::user();
+        $sponsors = Sponsor::where('user_id', $user->id)->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Sponsors retrieved successfully',
+            'sponsors' => $sponsors,
+        ]);
     }
 }
