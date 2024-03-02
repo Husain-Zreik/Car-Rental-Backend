@@ -13,7 +13,6 @@ return new class extends Migration
             $table->string('description');
             $table->decimal('amount', 8, 2);
             $table->enum('type', ['expense', 'income']);
-            $table->timestamps();
 
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
         });
