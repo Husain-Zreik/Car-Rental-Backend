@@ -13,6 +13,7 @@ Route::group(['prefix' => 'guest'], function () {
 
 Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
 
+    Route::get('cars/display', [CarController::class, 'getCars']);
     Route::post('cars/add', [CarController::class, 'addCar']);
 
     Route::get('sponsors/display', [SponsorController::class, 'getSponsors']);
