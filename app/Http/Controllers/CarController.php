@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Car;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class CarController extends Controller
@@ -16,14 +17,21 @@ class CarController extends Controller
                 'name' => 'required|string',
                 'plate' => 'required|string',
                 'model' => 'required|number',
-                'image_url' => 'required|string',
+                'image_base64' => 'required|string',
             ]);
+
+            $base64Image = $request->input('image_base64');
+            $decodedImage = base64_decode($base64Image);
+
+            $filename = 'car_' . time() . '.jpg';
+            $imagePath = 'cars_images/' . $filename;
+            Storage::disk('public')->put($imagePath, $decodedImage);
 
             $car = Car::create([
                 'name' => $request->name,
                 'plate' => $request->plate,
                 'model' => $request->model,
-                'image_url' => $request->image_url,
+                'image_path' => $imagePath,
                 'user_id' => Auth::id(),
             ]);
 
