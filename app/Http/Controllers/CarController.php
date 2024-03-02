@@ -48,4 +48,17 @@ class CarController extends Controller
             ], 422);
         }
     }
+
+    public function getCars()
+    {
+        $user = Auth::user();
+
+        $cars = Car::where('user_id', $user->id)->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'cars retrieved successfully',
+            'cars' => $cars,
+        ]);
+    }
 }
