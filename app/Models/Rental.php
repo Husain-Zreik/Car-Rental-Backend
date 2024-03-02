@@ -15,7 +15,7 @@ class Rental extends Model
         'car_id',
         'start_date',
         'end_date',
-        'insurance_video_url',
+        'insurance_video_path',
     ];
 
     public function user()

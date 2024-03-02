@@ -13,8 +13,8 @@ class Client extends Model
         'name',
         'number',
         'address',
-        'front_image_url',
-        'back_image_url',
+        'front_image_path',
+        'back_image_path',
         'user_id',
         'sponsor_id',
     ];

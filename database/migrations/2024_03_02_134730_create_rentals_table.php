@@ -16,6 +16,7 @@ return new class extends Migration
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->string('insurance_video_path')->nullable();
+            $table->timestamps();
         });
     }
 
