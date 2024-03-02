@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CarController;
 use App\Http\Controllers\SponsorController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 
 Route::group(['prefix' => 'guest'], function () {
     Route::get('unauthorized', [AuthController::class, 'unauthorized'])->name("unauthorized");
@@ -12,6 +12,8 @@ Route::group(['prefix' => 'guest'], function () {
 });
 
 Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
+
+    Route::post('cars/add', [CarController::class, 'addCar']);
 
     Route::get('sponsors/display', [SponsorController::class, 'getSponsors']);
     Route::post('sponsors/add', [SponsorController::class, 'addSponsor']);
