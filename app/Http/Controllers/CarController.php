@@ -16,7 +16,7 @@ class CarController extends Controller
             $request->validate([
                 'name' => 'required|string',
                 'plate' => 'required|string',
-                'model' => 'required|number',
+                'model' => 'required|integer',
                 'image_base64' => 'required|string',
             ]);
 

@@ -9,6 +9,8 @@ class Transaction extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'description',
         'amount',
