@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SponsorController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ Route::group(['prefix' => 'guest'], function () {
 });
 
 Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
-
-    Route::post("logout", [AuthController::class, "logout"]);
-    Route::post("refresh", [AuthController::class, "refresh"]);
+    Route::post('sponsor/add', [SponsorController::class, 'addSponsor']);
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
 });
