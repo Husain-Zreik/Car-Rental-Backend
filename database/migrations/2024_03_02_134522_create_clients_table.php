@@ -13,8 +13,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('number');
             $table->string('address');
-            $table->string('front_image_url');
-            $table->string('back_image_url')->nullable();
+            $table->string('front_image_path');
+            $table->string('back_image_path')->nullable();
             $table->timestamps();
 
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
