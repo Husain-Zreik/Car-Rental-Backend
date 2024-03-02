@@ -15,6 +15,14 @@ class AuthController extends Controller
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
+    public function unauthorized()
+    {
+        return response()->json([
+            'status' => 'Failed',
+            'message' => 'unauthorized',
+        ]);
+    }
+
     public function register(Request $request)
     {
         $request->validate([
