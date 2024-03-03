@@ -16,6 +16,9 @@ class ClientController extends Controller
             $request->validate([
                 'name' => 'required|string',
                 'number' => 'required|string',
+                'sponsor_id' => 'nullable|integer',
+                'sponsor_name' => 'nullable|string',
+                'sponsor_number' => 'nullable|string',
                 'address' => 'required|string',
                 'front_image_base64' => 'required|string',
                 'back_image_base64' => 'nullable|string',
@@ -34,12 +37,27 @@ class ClientController extends Controller
                 Storage::disk('public')->put($backImagePath, $decodedBackImage);
             }
 
+            $sponsor_id = $request->sponsor_id;
+            // Create a new sponsor if their is sponsor name and number without an id
+            if (!$request->sponsor_id && $request->sponsor_name && $request->sponsor_number) {
+                $sponsorController = new SponsorController();
+                $sponsorResponse = $sponsorController->addSponsor($request);
+
+                if ($sponsorResponse->status() === 200) {
+                    $sponsorData = $sponsorResponse->getData();
+                    $sponsor_id = $sponsorData->sponsor->id;
+                } else {
+                    throw new \Exception('Failed to create sponsor');
+                }
+            }
+
             $client = Client::create([
                 'name' => $request->name,
                 'number' => $request->number,
                 'address' => $request->address,
                 'front_image_path' => $frontImagePath,
                 'back_image_path' => $backImagePath,
+                'sponsor_id' => $sponsor_id,
                 'user_id' => Auth::id(),
             ]);
 
