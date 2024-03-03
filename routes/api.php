@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\RentalController;
 use App\Http\Controllers\SponsorController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +16,10 @@ Route::group(['prefix' => 'guest'], function () {
 Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
 
 
+    Route::post('rentals/add', [RentalController::class, 'addRent']);
+
     Route::post('clients/add', [ClientController::class, 'addClient']);
+    Route::get('/clients/{id}', [ClientController::class, 'getClientDetails']);
 
     Route::get('cars/display', [CarController::class, 'getCars']);
     Route::post('cars/add', [CarController::class, 'addCar']);
