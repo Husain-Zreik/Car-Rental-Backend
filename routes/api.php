@@ -5,6 +5,7 @@ use App\Http\Controllers\CarController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\SponsorController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'guest'], function () {
@@ -14,6 +15,9 @@ Route::group(['prefix' => 'guest'], function () {
 });
 
 Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
+
+    Route::post('/transactions/add', [TransactionController::class, 'addTransaction']);
+    Route::get('/transactions/display', [TransactionController::class, 'getTransaction']);
 
 
     Route::post('rentals/add', [RentalController::class, 'addRent']);
