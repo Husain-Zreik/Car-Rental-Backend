@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Rental;
+use App\Models\Sponsor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -38,7 +40,7 @@ class ClientController extends Controller
             }
 
             $sponsor_id = $request->sponsor_id;
-            // Create a new sponsor if their is sponsor name and number without an id
+
             if (!$request->sponsor_id && $request->sponsor_name && $request->sponsor_number) {
                 $sponsorController = new SponsorController();
                 $sponsorResponse = $sponsorController->addSponsor($request);
@@ -72,6 +74,53 @@ class ClientController extends Controller
                 'message' => 'Validation failed',
                 'errors' => $e->errors(),
             ], 422);
+        }
+    }
+
+    public function getClientDetails($id)
+    {
+        try {
+            $client = Client::findOrFail($id);
+            $rental = Rental::where('client_id', $id)->orderBy('start_date', 'desc')->first();
+
+            $sponsor = null;
+            if ($client->sponsor_id) {
+                $sponsor = Sponsor::find($client->sponsor_id);
+            }
+
+            $frontImagePath = asset('storage/' . $client->front_image_path);
+            $backImagePath = null;
+            if ($client->back_image_path) {
+                $backImagePath = asset('storage/' . $client->back_image_path);
+            }
+
+            $rentingStatus = 'Not Renting';
+            if ($rental) {
+                $rentingStatus = 'Renting';
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Client details retrieved successfully',
+                'client' => [
+                    'name' => $client->name,
+                    'number' => $client->number,
+                    'address' => $client->address,
+                    'renting_status' => $rentingStatus,
+                    'sponsor' => $sponsor ? [
+                        'name' => $sponsor->name,
+                        'number' => $sponsor->number,
+                    ] : null,
+                    'front_image_path' => $frontImagePath,
+                    'back_image_path' => $backImagePath,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to retrieve client details',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 }
