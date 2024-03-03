@@ -22,11 +22,12 @@ class DashboardController extends Controller
 
             $clientsData = [];
             foreach ($clients as $client) {
+                $rentals = Rental::where('client_id', $client->id)->get();
                 $rental = Rental::where('client_id', $client->id)->orderBy('start_date', 'desc')->first();
 
                 $car = null;
                 if ($rental) {
-                    $car = Car::where('id', $rental->car_id);
+                    $car = Car::find($rental->car_id);
                 }
 
                 $sponsor = null;
@@ -41,15 +42,18 @@ class DashboardController extends Controller
                 }
 
                 $clientsData[] = [
+                    'id' => $client->id,
                     'name' => $client->name,
                     'number' => $client->number,
                     'address' => $client->address,
+                    'created_at' => $client->created_at,
                     'front_image_path' => $frontImagePath,
                     'back_image_path' => $backImagePath,
                     'sponsor' => $sponsor ? [
                         'name' => $sponsor->name,
                         'number' => $sponsor->number,
                     ] : null,
+                    'rentals_count' => count($rentals),
                     'renting_status' => $client->renting_status ? True : False,
                     'rented_car' => $client->renting_status ? [
                         'name' => $car->name,
