@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Car;
 use App\Models\Client;
 use App\Models\Rental;
+use App\Models\Sponsor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -71,7 +72,7 @@ class CarController extends Controller
                 'name' => $car->name,
                 'plate' => $car->plate,
                 'model' => $car->model,
-                'image_path' => $imagePath,
+                'image_url' => $imagePath,
                 'available_status' => $car->available_status ? True : False,
                 'renting_info' => $car->available_status ? 'not rented' : [
                     'client_name' => $client->name,
@@ -86,5 +87,50 @@ class CarController extends Controller
             'message' => 'cars retrieved successfully',
             'cars' => $carsData,
         ]);
+    }
+
+    public function getCarDetails($id)
+    {
+        try {
+            $car = Car::findOrFail($id);
+            $rentals = Rental::where('car_id', $car->id)->get();
+
+            $rentalsData = [];
+            foreach ($rentals as $rental) {
+                $client = Client::findOrFail($rental->client_id);
+
+                $sponsor = null;
+                if ($client->sponsor_id) {
+                    $sponsor = Sponsor::find($client->sponsor_id);
+                }
+
+                $videoPath = asset('storage/' . $rental->insurance_video_path);
+
+                $rentalsData[] = [
+                    'id' => $rental->id,
+                    'name' => $client->name,
+                    'number' => $client->number,
+                    'sponsor' => $sponsor ? [
+                        'name' => $sponsor->name,
+                        'number' => $sponsor->number,
+                    ] : null,
+                    'start_date' => $rental->start_date,
+                    'end_date' => $rental->end_date,
+                    'insurance_video_url' => $videoPath,
+                ];
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'cars retrieved successfully',
+                'rentals' => $rentalsData,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to retrieve client details',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }
