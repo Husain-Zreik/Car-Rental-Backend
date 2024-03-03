@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Car;
 use App\Models\Client;
 use App\Models\Rental;
 use App\Models\Sponsor;
@@ -83,6 +84,11 @@ class ClientController extends Controller
             $client = Client::findOrFail($id);
             $rental = Rental::where('client_id', $id)->orderBy('start_date', 'desc')->first();
 
+            $car = null;
+            if ($rental) {
+                $car = Car::where('id', $rental->car_id);
+            }
+
             $sponsor = null;
             if ($client->sponsor_id) {
                 $sponsor = Sponsor::find($client->sponsor_id);
@@ -94,11 +100,6 @@ class ClientController extends Controller
                 $backImagePath = asset('storage/' . $client->back_image_path);
             }
 
-            $rentingStatus = 'Not Renting';
-            if ($rental) {
-                $rentingStatus = 'Renting';
-            }
-
             return response()->json([
                 'status' => 'success',
                 'message' => 'Client details retrieved successfully',
@@ -106,13 +107,18 @@ class ClientController extends Controller
                     'name' => $client->name,
                     'number' => $client->number,
                     'address' => $client->address,
-                    'renting_status' => $rentingStatus,
+                    'front_image_path' => $frontImagePath,
+                    'back_image_path' => $backImagePath,
                     'sponsor' => $sponsor ? [
                         'name' => $sponsor->name,
                         'number' => $sponsor->number,
                     ] : null,
-                    'front_image_path' => $frontImagePath,
-                    'back_image_path' => $backImagePath,
+                    'renting_status' => $client->renting_status ? True : False,
+                    'rented_car' => $client->renting_status ? [
+                        'name' => $car->name,
+                        'start_date' => $rental->start_date,
+                        'end_date' => $rental->end_date,
+                    ] : null,
                 ],
             ]);
         } catch (\Exception $e) {
