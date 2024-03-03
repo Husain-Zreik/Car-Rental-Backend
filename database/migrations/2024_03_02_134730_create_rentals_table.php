@@ -15,6 +15,7 @@ return new class extends Migration
             $table->foreignId('car_id')->constrained()->onDelete('cascade');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
+            $table->boolean('active_status')->default(true);
             $table->string('insurance_video_path')->nullable();
         });
     }
