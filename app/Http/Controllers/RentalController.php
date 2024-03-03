@@ -26,6 +26,20 @@ class RentalController extends Controller
             $car = Car::findOrFail($request->car_id);
             $client = Client::findOrFail($request->client_id);
 
+            if (!$car->available_status) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'The car is not available for rent',
+                ], 422);
+            }
+
+            if ($client->renting_status) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'The client is already renting a car',
+                ], 422);
+            }
+
             $insuranceVideoPath = null;
             if ($request->has('insurance_video')) {
                 $decodedInsuranceVideo = $request->file('insurance_video');
