@@ -86,7 +86,7 @@ class ClientController extends Controller
 
             $car = null;
             if ($rental) {
-                $car = Car::where('id', $rental->car_id);
+                $car = Car::find($rental->car_id);
             }
 
             $sponsor = null;
