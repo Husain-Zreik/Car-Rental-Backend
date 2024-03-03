@@ -20,6 +20,22 @@ class DashboardController extends Controller
             $totalExpense = Transaction::where('user_id', $userId)->where('type', 'expense')->sum('amount');
             $totalIncome = Transaction::where('user_id', $userId)->where('type', 'income')->sum('amount');
 
+            $expiredRentals = Rental::where('active_status', true)->where('end_date', '<', now())->get();
+
+            foreach ($expiredRentals as $rental) {
+                $client = Client::findOrFail($rental->client_id);
+                $car = Car::findOrFail($rental->car_id);
+
+                $rental->active_status = false;
+                $rental->save();
+
+                $client->renting_status = false;
+                $client->save();
+
+                $car->available_status = true;
+                $car->save();
+            }
+
             $clientsData = [];
             foreach ($clients as $client) {
                 $rentals = Rental::where('client_id', $client->id)->get();
