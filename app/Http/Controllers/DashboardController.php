@@ -47,8 +47,8 @@ class DashboardController extends Controller
                     'number' => $client->number,
                     'address' => $client->address,
                     'created_at' => $client->created_at,
-                    'front_image_path' => $frontImagePath,
-                    'back_image_path' => $backImagePath,
+                    'front_image_url' => $frontImagePath,
+                    'back_image_url' => $backImagePath,
                     'sponsor' => $sponsor ? [
                         'name' => $sponsor->name,
                         'number' => $sponsor->number,
