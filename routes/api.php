@@ -27,8 +27,9 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
     Route::post('clients/add', [ClientController::class, 'addClient']);
     Route::get('clients/{id}', [ClientController::class, 'getClientDetails']);
 
-    Route::get('cars/display', [CarController::class, 'getCars']);
     Route::post('cars/add', [CarController::class, 'addCar']);
+    Route::get('cars/display', [CarController::class, 'getCars']);
+    Route::get('cars/{id}', [CarController::class, 'getCarDetails']);
 
     Route::get('sponsors/display', [SponsorController::class, 'getSponsors']);
     Route::post('sponsors/add', [SponsorController::class, 'addSponsor']);
