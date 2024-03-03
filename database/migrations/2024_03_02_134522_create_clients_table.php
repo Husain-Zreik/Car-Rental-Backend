@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('number');
             $table->string('address');
+            $table->boolean('renting_status')->default(false);
             $table->string('front_image_path');
             $table->string('back_image_path')->nullable();
             $table->timestamps();

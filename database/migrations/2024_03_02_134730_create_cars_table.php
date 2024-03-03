@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('plate');
             $table->integer('model');
+            $table->boolean('available_status')->default(true);
             $table->string('image_path');
 
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
