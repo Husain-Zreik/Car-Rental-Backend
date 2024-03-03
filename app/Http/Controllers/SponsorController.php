@@ -13,13 +13,13 @@ class SponsorController extends Controller
     {
         try {
             $request->validate([
-                'name' => 'required|string|max:255',
-                'number' => 'required|string|max:25',
+                'sponsor_name' => 'required|string|max:255',
+                'sponsor_number' => 'required|string|max:25',
             ]);
 
             $sponsor = Sponsor::create([
-                'name' => $request->name,
-                'number' => $request->number,
+                'name' => $request->sponsor_name,
+                'number' => $request->sponsor_number,
                 'user_id' => Auth::id(),
             ]);
 

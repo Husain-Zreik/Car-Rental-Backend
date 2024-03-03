@@ -10,15 +10,14 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('sponsor_id')->nullable()->constrained('sponsors')->onDelete('cascade');
             $table->string('name');
             $table->string('number');
             $table->string('address');
             $table->string('front_image_path');
             $table->string('back_image_path')->nullable();
             $table->timestamps();
-
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('sponsor_id')->nullable()->constrained('sponsors')->onDelete('cascade');
         });
     }
 
