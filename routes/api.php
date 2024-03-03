@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\SponsorController;
 use App\Http\Controllers\TransactionController;
@@ -16,14 +17,15 @@ Route::group(['prefix' => 'guest'], function () {
 
 Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
 
-    Route::post('/transactions/add', [TransactionController::class, 'addTransaction']);
-    Route::get('/transactions/display', [TransactionController::class, 'getTransaction']);
+    Route::post('transactions/add', [TransactionController::class, 'addTransaction']);
+    Route::get('transactions/display', [TransactionController::class, 'getTransactions']);
 
+    Route::get('dashboard', [DashboardController::class, 'getDashboardInfo']);
 
     Route::post('rentals/add', [RentalController::class, 'addRent']);
 
     Route::post('clients/add', [ClientController::class, 'addClient']);
-    Route::get('/clients/{id}', [ClientController::class, 'getClientDetails']);
+    Route::get('clients/{id}', [ClientController::class, 'getClientDetails']);
 
     Route::get('cars/display', [CarController::class, 'getCars']);
     Route::post('cars/add', [CarController::class, 'addCar']);
