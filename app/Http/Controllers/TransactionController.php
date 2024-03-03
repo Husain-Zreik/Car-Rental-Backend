@@ -43,4 +43,24 @@ class TransactionController extends Controller
             ], 500);
         }
     }
+
+    public function getTransactions()
+    {
+        $user = Auth::user();
+
+        $transactions = Transaction::where('user_id', $user->id)->get();
+
+        $totalExpenses = $transactions->where('type', 'expense')->sum('amount');
+        $totalIncomes = $transactions->where('type', 'income')->sum('amount');
+        $totalProfit = $totalIncomes - $totalExpenses;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Transactions retrieved successfully',
+            'total_expenses' => $totalExpenses,
+            'total_incomes' => $totalIncomes,
+            'total_profit' => $totalProfit,
+            'transactions' => $transactions,
+        ]);
+    }
 }
